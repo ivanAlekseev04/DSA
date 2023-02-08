@@ -1,9 +1,9 @@
 #pragma once
-// An approach to find cycle in undirected grapgh using DSU 
+// Finding cycle in undirected graph using DSU
 
 #include <bits/stdc++.h>
 using namespace std;
- 
+
 int v, e;
  
 struct Component {
@@ -16,18 +16,12 @@ struct Component {
 struct Node {
     int from;
     int to;
-    int weight;
  
-    Node() : from(-1), to(-1), weight(0) {}
-    Node(int from, int to, int weight) : from(from), to(to), weight(weight) {}
-};
-struct Comparator {
-    bool operator ()(const Node& f, const Node& s) const {
-        return (f.weight > s.weight);
-    }
+    Node() : from(-1), to(-1) {}
+    Node(int from, int to) : from(from), to(to) {}
 };
  
-priority_queue<Node, vector<Node>, Comparator> nodes;
+vector<Node> graph;
 vector<Component> components;
  
 void setUpComponents() {
@@ -46,8 +40,7 @@ int find(int val) {
 }
 bool isCyclic() {
     for(size_t i = 0; i < e; i++) {
-        Node toOperate = nodes.top();
-        nodes.pop();
+        Node toOperate = graph[i];
  
         int root1 = find(toOperate.from);
         int root2 = find(toOperate.to);
@@ -72,3 +65,34 @@ bool isCyclic() {
  
     return false;
 }
+
+// int main(int argc, char** argv) {
+//     cin >> v >> e;
+
+//     setUpComponents();
+
+//     for(int i = 0, from = 0, to = 0; i < e; i++) {
+//         cin >> from >> to;
+
+//         graph.push_back(Node(from, to));
+//     }
+
+//     cout << boolalpha << isCyclic() << '\n';
+
+//     /*
+//     5 4
+//     1 3
+//     3 0
+//     0 2
+//     2 4
+//     Result: false
+
+//     5 5
+//     1 3
+//     3 0
+//     0 2
+//     2 4
+//     4 0
+//     Result: true
+//     */
+// }
