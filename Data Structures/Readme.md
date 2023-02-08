@@ -1,3 +1,5 @@
-> Directed unweighted graph
-> Binary Search Tree
-> Singly Linked List
+```
+Directed unweighted graph
+Binary Search Tree
+Singly Linked List
+```
