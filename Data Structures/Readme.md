@@ -1,11 +1,11 @@
 ```
-Directed unweighted graph
+Directed unweighted graph:
 - dfs
 - bfs
 - topological sort
 ```
 ```
-Binary Search Tree
+Binary Search Tree:
 - insert node 
 - remove node
 - print tree
@@ -13,7 +13,7 @@ Binary Search Tree
 - height of left side
 ```
 ```
-Singly Linked List
+Singly Linked List:
 - basic list functions
 - isPalindrome check
 ```
