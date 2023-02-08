@@ -1,6 +1,6 @@
 ```
 Directed unweighted graph
-*- dfs*
+- dfs
 - bfs
 - topological sort
 ```
