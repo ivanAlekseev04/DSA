@@ -2,6 +2,9 @@
 Kruskal's MST
 ```
 ```
+Dijikstra minimum path in graph
+```
+```
 Sorting algorithms:
 - Bubble sort
 - Selection sort
