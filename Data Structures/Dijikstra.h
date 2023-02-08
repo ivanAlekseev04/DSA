@@ -14,23 +14,20 @@ void shortestPathDijkstra(int v)
         priority_queue< pair<int, int>, vector <pair<int, int>>, greater<pair<int, int>> > pq;
         pq.push({ 0,v });
  
-        while (!pq.empty())
-        {
+        while (!pq.empty()) {
                 int current = pq.top().second;
                 int costToCurrent = pq.top().first;
                 pq.pop();
  
-                //   if(costToCurrent > dist[current]) continue;
+                if(costToCurrent > dist[current]) {
+                  continue;
+                }
  
- 
-                for (pair<int, int> neighbour : adjacencyList[current])
-                {
- 
+                for (pair<int, int> neighbour : adjacencyList[current]) {
                         int child = neighbour.first;
                         int costToChildOfCurrent = neighbour.second;
        
-                        if (dist[child] > costToCurrent + costToChildOfCurrent  )
-                        {
+                        if (dist[child] > costToCurrent + costToChildOfCurrent  ) {
                                 dist[child] = costToCurrent + costToChildOfCurrent;
                                 pq.push({ costToChildOfCurrent + costToCurrent, child });
                         }
@@ -45,22 +42,21 @@ int main()
         int numberOfEdges = 0, numberOfVertices = 0, costToChildOfCurrent = 0;
         int from = 0, to = 0;
         cin >> numberOfVertices >> numberOfEdges;
-        while (numberOfEdges)
-        {
+        while (numberOfEdges) {
                 cin >> from >> to >> costToChildOfCurrent;
+         
                 adjacencyList[from].push_back({ to, costToChildOfCurrent });
                 adjacencyList[to].push_back({ from, costToChildOfCurrent });
+         
                 numberOfEdges--;
         }
  
         shortestPathDijkstra(0);
  
-        for (int i = 0; i < numberOfVertices; i++)
-        {
+        for (int i = 0; i < numberOfVertices; i++) {
                 cout << dist[i] << " ";
         }
  
-        return 0;
         /*
         9 14
         0 1 4
