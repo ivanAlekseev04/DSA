@@ -1,10 +1,4 @@
 ```
-Graph algorithms:
-- Kruskal's MST
-- Dijikstra minimum path in graph
-- Cycle-check in undirected graph 
-```
-```
 Sorting algorithms:
 - Bubble sort
 - Selection sort
