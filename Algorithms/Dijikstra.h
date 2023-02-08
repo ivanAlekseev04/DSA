@@ -7,7 +7,9 @@ vector<pair<int, int>>adjacencyList[N];
  
 void shortestPathDijkstra(int v)
 {
-        for (int i = 0; i < N; i++) dist[i] = INT_MAX;
+       for (int i = 0; i < N; i++) {
+           dist[i] = INT_MAX;
+       }
        
         dist[v] = 0;
  
