@@ -1,7 +1,7 @@
 # Sorting algorithms
 
-**Adaptive** - can have different performance with fully sorted and partially sorted.
-**In-place** - doesn’t need additional space.
+> **Adaptive** - can have different performance with fully sorted and partially sorted.
+> **In-place** - doesn’t need additional space.
 
 ## Bubble sort (N^2)
 ```
