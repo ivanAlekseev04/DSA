@@ -8,7 +8,7 @@
 - Stable 
 - Adaptive 
 - Small sizes
-- in-place
+- In-place
 ```
 
 ## Selection sort *(N^2)*
@@ -24,23 +24,23 @@
 ## Insertion sort *(N^2)*
 ```
 - Adaptive 
-- in-place 
-- reverse order -> max time; already sorted -> min time 
-- stable 
+- In-place 
+- Reverse order -> max time; already sorted -> min time 
+- Stable 
 - In-place
 ```
 
 ## Counting sort *(N + K)*
 ```
 - Not in-place
-- works only with positive values [0, 1e6]
+- Works only with positive values [0, 1e6]
 - May be stable
 ```
 
 ## Merge sort *(NLogN)*
 ```
-- stable by default
-- for large size (fast)/small size (not so as other algorithms)
+- Stable by default
+- For large size (fast)/small size (not so as other algorithms)
 - Not in-place
 - Not adaptive 
 - Can be paralleled
@@ -49,10 +49,10 @@
 ## Quick sort *(N^2)*
 ```
 - “Divide & conquer” algorithm
-- worst case 1 (picking min/max element as a pivot)
-- worst case 2 (array is already sorted in increasing/decreasing order)
+- Worst case 1 (picking min/max element as a pivot)
+- Worst case 2 (array is already sorted in increasing/decreasing order)
 - May be stable
-- in-place 
+- In-place 
 - Stable 
 - Large data sets/ not good for small sizes 
 ```
