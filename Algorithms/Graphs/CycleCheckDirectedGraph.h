@@ -65,3 +65,66 @@ bool isCyclic(int V, vector<int> adj[]) {
 	    
 // 	}
 // }
+
+
+// Second approach (easier)
+// https://www.hackerrank.com/contests/sda-exam-27-01-19-/challenges/-1-12
+
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<vector<int>> adj;
+
+void dfs(int start, int vertex, bool& isCycle, vector<bool>& visited) {
+    visited[vertex] = true;
+    
+    for(auto v : adj[vertex]) {
+        if(start == v) {
+            isCycle = true;
+        }
+        
+        if(!visited[v]) {
+            dfs(start, v, isCycle, visited);
+        }
+    }
+}
+
+// int main() {
+//     int tests;
+    
+//     cin >> tests;
+    
+//     for(int i = 0; i < tests; i++) {
+//         int v, e;
+        
+//         cin >> v >> e;
+        
+//         adj = vector<vector<int>>(v + 1);
+        
+//         for(int j = 0; j < e; j++) {
+//             int from, to, weight;
+            
+//             cin >> from >> to >> weight;
+            
+//             adj[from].push_back(to);
+//         }
+
+//         bool isCycle = false;
+        
+//         for(int j = 1; j < v + 1; j++) {
+//             vector<bool> visited(v + 1);
+            
+//             dfs(j, j, isCycle, visited);
+            
+//             if(isCycle) {
+//                 cout << "true" << " ";
+                
+//                 break;
+//             }
+//         }
+        
+//         if(!isCycle) {
+//             cout << "false" << " ";
+//         }
+//     }
+// }
