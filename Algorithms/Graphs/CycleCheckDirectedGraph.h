@@ -1,5 +1,7 @@
 #pragma once
 
+// First approach (harder)
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -69,9 +71,6 @@ bool isCyclic(int V, vector<int> adj[]) {
 
 // Second approach (easier)
 // https://www.hackerrank.com/contests/sda-exam-27-01-19-/challenges/-1-12
-
-#include <bits/stdc++.h>
-using namespace std;
 
 vector<vector<int>> adj;
 
