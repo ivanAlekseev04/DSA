@@ -1,97 +1,82 @@
-#include <map>
-#include <set>
-#include <list>
-#include <cmath>
-#include <ctime>
-#include <deque>
-#include <queue>
-#include <stack>
-#include <string>
-#include <bitset>
-#include <cstdio>
-#include <limits>
-#include <vector>
-#include <climits>
-#include <cstring>
-#include <cstdlib>
-#include <fstream>
-#include <numeric>
-#include <sstream>
-#include <iostream>
-#include <algorithm>
-#include <unordered_map>
+#include <bits/stdc++.h>
+
 using namespace std;
-typedef pair<int, pair<long long, int> > pii;
-int n;
-int t;
 
-priority_queue<pii, vector<pii> > pq;
-int c[500000];
+using i64 = long long;
+using u64 = unsigned long long;
 
-pair<int, long long> p[100001];
-vector<pair<long long,int> > times;
-int k;
-pii pt;
-
-int getProduct(int q)
-{
-    int left = 0;
-    int right = k-1;
-    int mid = (left + right) / 2;
+struct OrdPair {
+    i64 first;
+    i64 second;
     
-    while (left <= right)
-    {
-        mid = (left + right) / 2;
-        if (times[mid].first <= q && times[mid + 1].first > q)
-        {
-            return times[mid].second;
-        }
-        if (times[mid].first > q)
-        {
-            right = mid - 1;
-        }
-        else
-        {
-            left = mid + 1;
-        }
+    bool operator<(const OrdPair& other) const {
+        return first < other.first;
     }
-    
-    return times[mid].second;
-}
+};
+
 int main() {
-    ios::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
     
-    cin >> n;
+    i64 N;
+    cin >> N;
     
-    for (int i = 0; i < n; i++)
-    {
-        cin >> p[i].first;
-        cin >> p[i].second;
-        
-        c[p[i].first]++;
-        
-        pq.push(make_pair(c[p[i].first], make_pair(p[i].second, p[i].first)));
-        pt = pq.top();
-        //cout << pt.first << " " << pt.second.first << " " << pt.second.second << endl;
-        times.push_back(make_pair(pt.second.first, pt.second.second));
+    vector<OrdPair> changes;
+    changes.reserve(N);
+    
+    unordered_map<i64, i64> counts;
+    i64 maxCount = 0;
+    i64 maxCountAt = -1;
+    
+    for(i64 i = 0; i < N; i++){
+        i64 id, time;
+        cin >> id >> time;
+
+        counts[id]++;
+
+        if(counts[id] >= maxCount){
+            if(maxCountAt != id){
+                changes.push_back({time, id});
+            }
+            
+            maxCount = counts[id];
+            maxCountAt = id;
+        }
     }
     
-    cin >> t;
-    k = times.size();
-    times.push_back(make_pair(10000000000, -1));
-    int last;
-    int q;
-    for (int i = 0; i < t; i++)
-    {
-        cin >> q;
-        if (q < times[0].first)
-        {
-            cout << "-1\n";
+    // for(auto i : changes) cout << i.second << " at time " << i.first << endl;
+    // cout << endl;
+    
+    i64 Q;
+    cin >> Q;
+    
+    for(i64 t = 0; t < Q; t++){
+        i64 time;
+        cin >> time;
+        
+        i64 ans = -1;
+        
+        auto lastChange = lower_bound(changes.begin(), changes.end(), OrdPair{time, -1});
+        
+        if(lastChange == changes.end()){
+            // after the final sale
+            ans = changes[changes.size() - 1].second;
+        }else{
+            if(lastChange->first == time){
+                // exactly after a change
+                ans = lastChange->second;
+            }else{
+                if(lastChange != changes.begin()){
+                    // not before first sale, take previous
+                    lastChange--;
+                    ans = lastChange->second;
+                }
+            }
         }
-        else
-        {
-            cout << getProduct(q) << "\n";
-        }
+        
+        cout << ans << '\n';
+        
+        // cout << "last change for query " << time << " at index " << (lastChange - changes.begin()) << endl;
     }
     
     return 0;
