@@ -122,7 +122,7 @@ void countingSort(int* arr, size_t size)
 }
 
 // Counting sort - 2 variant
-void countSort(int* arr, int size) {
+void countSort(int* arr, int size) { 
     int max = *max_element(arr, arr + size);
 
     int* buff = new int[max + 1]{};
@@ -142,8 +142,8 @@ void countSort(int* arr, int size) {
         buff[arr[i]]--;
     }
 
-    for(int i = 0; i < size; i++) {
-        arr[i] = sorted[i];
+    for(int i = 0; i < size; i++) { // Sort in ascending order by default
+        arr[i] = sorted[i];         // Fill arr[] in reverse order from sorted[] -> from the end to start
     }
 
     delete buff;
