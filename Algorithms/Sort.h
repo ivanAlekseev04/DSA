@@ -1,6 +1,8 @@
 #pragma once
 #include <algorithm>
 
+/*More useful sorting algorithms*/
+
 // Complexity: O(N^2)
 void bubbleSort(int* arr, size_t size) 
 {
@@ -20,54 +22,18 @@ void bubbleSort(int* arr, size_t size)
     }
 }
 
-
-// Complexity: O(N^2)
-void selectionSort(int* arr, size_t size) 
-{
-    for (size_t i = 0; i < (size - 1); i++)
-    {
-        for (size_t j = (i + 1); j < size; j++)
-        {
-            if(arr[i] > arr[j])
-                std::swap(arr[j], arr[i]);
-        }
-    }
-};
-
-
-// Complexity: O(N^2) 
-void insertionSort(int* arr, size_t size) 
-{
-    for (size_t i = 1; i < size; i++)
-    {
-        int cur = arr[i];
-        int prevIdx = i - 1;
-
-        while(prevIdx >= 0 && arr[prevIdx] > cur) 
-        {
-            arr[prevIdx + 1] = arr[prevIdx];
-            prevIdx--;
-        }
-
-        arr[prevIdx + 1] = cur;
-    }
-    
-};
-
-
 // Complexity: O(NlogN)
-void mergeSort(int* arr, size_t leftStart, size_t rightEnd) 
+void mergeSort(int* arr, size_t leftStart, size_t rightEnd) // "rightEnd" need to be (size - 1) for the proper work
 {
-    if(leftStart >= rightEnd)
-        return; 
-
+    if(leftStart < rightEnd) {
         size_t mid = leftStart + ((rightEnd - leftStart) / 2);
 
         mergeSort(arr, leftStart, mid);
         mergeSort(arr, mid + 1, rightEnd);
+    
         merge(arr, leftStart, mid, rightEnd);
+    }
 };
-
 void merge(int* arr, size_t leftStart, size_t mid, size_t rightEnd) 
 {
     size_t fSize = mid - leftStart + 1;
@@ -85,7 +51,7 @@ void merge(int* arr, size_t leftStart, size_t mid, size_t rightEnd)
     size_t i = 0, j = 0, k = leftStart;
     while(i < fSize && j < sSize)
     {
-        if(fHalf[i] >= sHalf[j])
+        if(fHalf[i] >= sHalf[j]) // ">=" gives descending order; "<=" gives ascending order
             arr[k++] = sHalf[j++];
         else
             arr[k++] = fHalf[i++];
@@ -101,7 +67,6 @@ void merge(int* arr, size_t leftStart, size_t mid, size_t rightEnd)
     delete[] sHalf;
 }
 
-
 // Complexity: O(NlogN)
 void quickSort(int* arr, int low, int high) 
 {
@@ -113,7 +78,6 @@ void quickSort(int* arr, int low, int high)
         quickSort(arr, pi + 1, high);
     }
 };
-
 size_t partition(int* arr, size_t low, size_t high) 
 {
     int pivot = arr[high];
@@ -180,3 +144,39 @@ void countSort(int* arr, int size) {
     delete buff;
     delete sorted;
 }
+
+
+/*Less frequent sort algorithms*/
+
+// Complexity: O(N^2)
+void selectionSort(int* arr, size_t size) 
+{
+    for (size_t i = 0; i < (size - 1); i++)
+    {
+        for (size_t j = (i + 1); j < size; j++)
+        {
+            if(arr[i] > arr[j])
+                std::swap(arr[j], arr[i]);
+        }
+    }
+};
+
+
+// Complexity: O(N^2) 
+void insertionSort(int* arr, size_t size) 
+{
+    for (size_t i = 1; i < size; i++)
+    {
+        int cur = arr[i];
+        int prevIdx = i - 1;
+
+        while(prevIdx >= 0 && arr[prevIdx] > cur) 
+        {
+            arr[prevIdx + 1] = arr[prevIdx];
+            prevIdx--;
+        }
+
+        arr[prevIdx + 1] = cur;
+    }
+    
+};
