@@ -22,49 +22,54 @@ void bubbleSort(int* arr, size_t size)
     }
 }
 
-// Complexity: O(NlogN)
-void mergeSort(int* arr, size_t leftStart, size_t rightEnd) // "rightEnd" need to be (size - 1) for the proper work
-{
-    if(leftStart < rightEnd) {
-        size_t mid = leftStart + ((rightEnd - leftStart) / 2);
+// Complexity: O(NlogN) 
+void mergeSort(int* arr, int start, int end) { // "End" need to be (size - 1) for the proper work
+    if (start < end) {
+        int mid = start + ((end - start) / 2);
 
-        mergeSort(arr, leftStart, mid);
-        mergeSort(arr, mid + 1, rightEnd);
-    
-        merge(arr, leftStart, mid, rightEnd);
+        mergeSort(arr, start, mid);
+        mergeSort(arr, mid + 1, end);
+
+        merge(arr, start, mid, end);
     }
-};
-void merge(int* arr, size_t leftStart, size_t mid, size_t rightEnd) 
-{
-    size_t fSize = mid - leftStart + 1;
-    size_t sSize = rightEnd - mid;
+}; 
+void merge(int* arr, int start, int mid, int end) {
+    int leftSize = mid - start + 1;
+    int rightSize = end - mid;
 
-    int* fHalf = new int[fSize]{};
-    int* sHalf = new int[sSize]{};
+    int* left = new int[leftSize];
+    int* right = new int[rightSize];
 
-    for (size_t i = 0; i < fSize; i++)
-        fHalf[i] = arr[leftStart + i];
-    
-    for (size_t i = 0; i < sSize; i++)
-        sHalf[i] = arr[mid + i + 1];
-    
-    size_t i = 0, j = 0, k = leftStart;
-    while(i < fSize && j < sSize)
-    {
-        if(fHalf[i] >= sHalf[j]) // ">=" gives descending order; "<=" gives ascending order
-            arr[k++] = sHalf[j++];
-        else
-            arr[k++] = fHalf[i++];
+    for(int i = 0; i < leftSize; i++) {
+        left[i] = arr[start + i];
     }
 
-    while(i < fSize)
-        arr[k++] = fHalf[i++];
+    for(int i = 0; i < rightSize; i++) {
+        right[i] = arr[mid + 1 + i];
+    }
 
-    while(j < sSize)
-        arr[k++] = sHalf[j++];
+    int leftIdx = 0;
+    int rightIdx = 0;
+    int mergeIdx = start;
 
-    delete[] fHalf;
-    delete[] sHalf;
+    while(leftIdx < leftSize && rightIdx < rightSize) {
+        if(left[leftIdx] <= right[rightIdx]) { // ">=" gives descending order; "<=" gives ascending order
+            arr[mergeIdx++] = left[leftIdx++];
+        } else {
+            arr[mergeIdx++] = right[rightIdx++];
+        }
+    }
+
+    while(leftIdx < leftSize) {
+        arr[mergeIdx++] = left[leftIdx++];
+    }
+
+    while(rightIdx < rightSize) {
+        arr[mergeIdx++] = right[rightIdx++];
+    }
+
+    delete left;
+    delete right; 
 }
 
 // Complexity: O(NlogN)
