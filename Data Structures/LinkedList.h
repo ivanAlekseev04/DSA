@@ -186,6 +186,28 @@ public:
             elem = elem->next; 
         }
     }
+    void reverseWithPointers() {
+            if(head == tail || head == nullptr) {
+                return;
+            }
+
+            Node* prev = head;
+            Node* next = head->next;
+            Node* temp;
+
+            prev->next = nullptr;
+            tail = prev;
+
+            while(next != nullptr) {
+                temp = next->next;
+                next->next = prev;
+
+                prev = next;
+                next = temp;
+            }
+
+            head = prev;
+    }
     size_t count(const T& data) const {
         size_t counter = 0;
         Node* iter = head;
