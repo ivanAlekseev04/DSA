@@ -56,3 +56,11 @@
 - Stable 
 - Large data sets/ not good for small sizes 
 ```
+
+## Heap sort *(Nlog(N))*
+```
+- Non-stabel
+- In-place
+- Requires knowledge of Heap data structure and "heapify" process 
+- Large data sets are suitable for it 
+```
