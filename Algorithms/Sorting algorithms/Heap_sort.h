@@ -1,3 +1,5 @@
+// Time complexity: O(nlog(n))
+// Non-stable
 void heapSort(int* arr, int size) {
     int rBound = size;
 
