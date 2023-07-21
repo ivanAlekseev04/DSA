@@ -37,7 +37,7 @@
 - May be stable
 ```
 
-## Merge sort *(NLogN)*
+## Merge sort *(NLog(N))*
 ```
 - Stable by default
 - For large size (fast)/small size (not so as other algorithms)
