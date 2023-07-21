@@ -1,5 +1,4 @@
 // Complexity: O(NlogN)
-// Stable
 void mergeSort(int* arr, int start, int end) { // "End" need to be (size - 1) for the proper work
     if (start < end) {
         int mid = start + ((end - start) / 2);
