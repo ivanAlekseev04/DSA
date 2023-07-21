@@ -34,7 +34,7 @@
 ```
 - Not in-place
 - Works only with positive values [0, 1e6]
-- May be stable
+- Stable (when feeling sorted array traversing original from the end to begin); non-stable in case of traversing from the begin to end
 ```
 
 ## Merge sort *(NLog(N))*
