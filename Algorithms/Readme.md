@@ -6,6 +6,7 @@ Sorting algorithms:
 - Insertion sort
 - Merge sort
 - Quick sort
+- Heap sort
 ```
 ```
 Searching algorithms:
