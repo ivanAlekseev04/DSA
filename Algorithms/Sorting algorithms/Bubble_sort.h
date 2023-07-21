@@ -1,5 +1,4 @@
 // Time Complexity: O(N^2)
-// Stable
 void bubbleSort(int* arr, size_t size) 
 {
     bool stop = false;
