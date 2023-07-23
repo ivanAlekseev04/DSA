@@ -38,7 +38,7 @@ int main() {
         // adj[to].insert(from); // Uncomment to make graph *undirected*
     }
 
-    topologicalSort();
+    dfs();
 }
 
 /*
