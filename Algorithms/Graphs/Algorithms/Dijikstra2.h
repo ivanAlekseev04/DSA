@@ -21,7 +21,7 @@ unordered_map<int, unordered_map<int, int>> adj;
 vector<int> distances;
 
 void dijikstra(int startEdge) {    
-    distances = vector<int>(E, INT32_MAX);
+    distances = vector<int>(V, INT32_MAX);
     distances[startEdge] = 0;
 
     priority_queue<Edge, vector<Edge>, cmp> pq;
@@ -48,13 +48,13 @@ void dijikstra(int startEdge) {
 }
 
 int main() {
-    cin >> E >> V;
+    cin >> V >> E;
 
-    for(int i = 0; i < E; i++)
+    for(int i = 0; i < V; i++)
         adj.insert(make_pair(i, unordered_map<int, int>()));
 
     int from, to, weight;
-    for(int i = 0; i < V; i++) {
+    for(int i = 0; i < E; i++) {
         cin >> from >> to >> weight;
         adj[from][to] = weight;
         adj[to][from] = weight;
@@ -65,15 +65,15 @@ int main() {
 
     dijikstra(startVert);
 
-    for(int i = 0; i < E; i++) {
+    for(int i = 0; i < V; i++) {
         if(i != startVert) 
             cout << "Vertex: " << i << " Distance: " << distances[i] << '\n';
     }
 }
 
 /*
-E = 9
-V = 14
+V = 9
+E = 14
 
 0 1 4
 0 7 8
