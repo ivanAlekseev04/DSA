@@ -1,98 +1,120 @@
 #pragma once
-// Finding cycle in undirected graph using DSU
+// Finding cycle in undirected graph using DSUF(Disjoint-set union-find)
 
 #include <bits/stdc++.h>
 using namespace std;
 
-int v, e;
- 
-struct Component {
-    int parent;
-    int rank;
- 
-    Component() : parent(-1), rank(0) {}
-    Component(int parent, int rank) : parent(parent), rank(rank) {}
-};
 struct Node {
     int from;
     int to;
- 
-    Node() : from(-1), to(-1) {}
+
+    Node() : from(0), to(0) {}
     Node(int from, int to) : from(from), to(to) {}
 };
- 
-vector<Node> graph;
-vector<Component> components;
- 
-void setUpComponents() {
-    components = vector<Component>(v);
- 
-    for(size_t i = 0; i < v; i++) {
-        components[i] = Component(i, 0);
+
+struct RankedNode {
+    int parent;
+    int rank;
+
+    RankedNode(int parent, int rank) : parent(parent), rank(rank) {}
+    RankedNode() : parent(0), rank(0) {}
+};
+
+int E, V;
+vector<Node> adj;
+vector<RankedNode> ranks;
+
+void initializeGraph() {
+    adj.clear();
+    int from, to;
+    int weight; // "weight" is redundant but must be given according to the task...
+
+    for(int i = 0; i < E; i++) {
+        cin >> from >> to >> weight;
+        adj.push_back(Node(from, to));
     }
 }
-int find(int val) {
-    if(components[val].parent != val) {
-        components[val].parent = find(components[val].parent);
+void initializeRanks() {
+    ranks.clear();
+
+    for(int i = 0; i <= V; i++) { // If edges' numbers begin from 0 -> then "i < V". Otherwise, "i <= V"
+        ranks.push_back(RankedNode(i, 0));
     }
- 
-    return components[val].parent;
+}
+
+void unionEdges(int from, int to) {
+    if(ranks[from].rank < ranks[to].rank) {
+        ranks[from].parent = to;
+    } else if(ranks[to].rank < ranks[from].rank) {
+        ranks[to].parent = from;
+    } else {
+        ranks[from].parent = to;
+        ranks[to].rank++;
+    }
+}
+int findParent(int from) {
+    if(ranks[from].parent != from) {
+        ranks[from].parent = findParent(ranks[from].parent);
+    }
+
+    return ranks[from].parent;
 }
 bool isCyclic() {
-    for(size_t i = 0; i < e; i++) {
-        Node toOperate = graph[i];
- 
-        int root1 = find(toOperate.from);
-        int root2 = find(toOperate.to);
- 
-        if(root1 != root2) {
-            if(components[root1].rank < components[root2].rank) {
-                components[root1].parent = root2;
-            }
-            else if(components[root1].rank > components[root2].rank) {
-                components[root2].parent = root1;
-            }
-            else {
-                components[root1].parent = root2;
- 
-                components[root2].rank++;
-            }
-        }
-        else {
+    for(int i = 0; i < E; i++) {
+        int fromP = findParent(adj[i].from);
+        int toP = findParent(adj[i].to);
+
+        if(fromP != toP) {
+            unionEdges(fromP, toP);
+        } else {
             return true;
         }
     }
- 
+
     return false;
 }
 
-// int main(int argc, char** argv) {
-//     cin >> v >> e;
+int main() {
+    vector<bool> res;
 
-//     setUpComponents();
+    int tests;
+    cin >> tests;
 
-//     for(int i = 0, from = 0, to = 0; i < e; i++) {
-//         cin >> from >> to;
+    for(int i = 0; i < tests; i++) {
+        cin >> V >> E;
+        
+        if(V == 1) {
+            res.push_back(false);
+            continue;
+        }
 
-//         graph.push_back(Node(from, to));
-//     }
+        initializeGraph();
+        initializeRanks();
 
-//     cout << boolalpha << isCyclic() << '\n';
+        res.push_back(isCyclic());
+    }
 
-//     /*
-//     5 4
-//     1 3
-//     3 0
-//     0 2
-//     2 4
-//     Result: false
+    for(auto it : res) {
+        cout << boolalpha << it << " ";
+    }
+}
 
-//     5 5
-//     1 3
-//     3 0
-//     0 2
-//     2 4
-//     4 0
-//     Result: true
-//     */
-// }
+/*
+
+1
+3 5
+1 3 1
+1 2 4
+2 3 3
+3 1 3
+3 2 4
+Result: true
+
+1
+4 3
+3 2 5
+3 1 6
+1 4 6
+Result: false
+
+*/
