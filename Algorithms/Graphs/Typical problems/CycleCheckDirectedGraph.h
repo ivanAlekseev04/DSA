@@ -1,129 +1,83 @@
 #pragma once
 
-// First approach (harder)
-
 #include <bits/stdc++.h>
 using namespace std;
 
-bool isCyclic_util(vector<int> adj[], vector<bool> visited, int curr) {
-    if(visited[curr]) {
-        return true;
+int E, V; 
+vector<vector<int>> adj; // Actual graph
+
+bool isCyclic = 0;
+vector<bool> visited; // Keep track of already visited vertices
+vector<bool> stackTrack; // Keep track of current recursion stack
+
+void intializeGraph() {
+    adj = vector<vector<int>>(V, vector<int>());
+
+    int from, to, weight;
+    for(int i = 0; i < E; i++) {
+        cin >> from >> to >> weight; // There is no need of "weight" here
+
+        adj[from].push_back(to); 
     }
-    
-    visited[curr] = true;
-    bool FLAG = false;
-  
-    for(int i = 0; i < adj[curr].size(); ++i) {
-        FLAG = isCyclic_util(adj, visited, adj[curr][i]);
-      
-        if(FLAG) {
-            return true;
+}
+void dfsUtil(int from) {
+    if(!visited[from]) {
+
+        visited[from] = true;
+        stackTrack[from] = true; // Adding vertex to current recursion stack
+
+        for(auto it : adj[from]) {
+            if(!visited[it]) { 
+                dfsUtil(it);
+            } else if(stackTrack[it]) {
+                isCyclic = true;
+            }
         }
     }
-  
-    return false;
+
+    stackTrack[from] = false; // Remove from current recursion stack
 }
+void dfs() {
+    visited = vector<bool>(V, false);   
+    stackTrack = vector<bool>(V, false);
 
-bool isCyclic(int V, vector<int> adj[]) {
-   vector<bool> visited(V, false);
-   bool FLAG = false;
-  
-   for(int i = 0; i < V; ++i) {
-           visited[i] = true;
-     
-           for(int j = 0; j < adj[i].size(); ++j) {
-               FLAG = isCyclic_util(adj,visited,adj[i][j]);
-             
-               if(FLAG) {
-                   return true;
-               }
-           }
-     
-           visited[i] = false;
-   }
-  
-   return false;
-}
+    isCyclic = 0;
 
-// int main() {
-	
-// 	int t;
-// 	cin >> t;
-	
-// 	while(t--){
-	    
-// 	    int v, e;
-// 	    cin >> v >> e;
-	    
-// 	    vector<int> adj[v];
-	    
-// 	    for(int i =0;i<e;i++){
-// 	        int u, v;
-// 	        cin >> u >> v;
-// 	        adj[u].push_back(v);
-// 	    }
-	    
-// 	    cout << isCyclic(v, adj) << endl;
-	    
-// 	}
-// }
+    for(int i = 0; i < V; i++) {
+        if(!visited[i])
+            dfsUtil(i);
 
-
-// Second approach (easier)
-// https://www.hackerrank.com/contests/sda-exam-27-01-19-/challenges/-1-12
-
-vector<vector<int>> adj;
-
-void dfs(int start, int vertex, bool& isCycle, vector<bool>& visited) {
-    visited[vertex] = true;
-    
-    for(auto v : adj[vertex]) {
-        if(start == v) {
-            isCycle = true;
-        }
-        
-        if(!visited[v]) {
-            dfs(start, v, isCycle, visited);
-        }
+        if(isCyclic)
+            break;
     }
 }
 
-// int main() {
-//     int tests;
-    
-//     cin >> tests;
-    
-//     for(int i = 0; i < tests; i++) {
-//         int v, e;
-        
-//         cin >> v >> e;
-        
-//         adj = vector<vector<int>>(v + 1);
-        
-//         for(int j = 0; j < e; j++) {
-//             int from, to, weight;
-            
-//             cin >> from >> to >> weight;
-            
-//             adj[from].push_back(to);
-//         }
+int main() {
+    int tests;
+    cin >> tests;
 
-//         bool isCycle = false;
+    for(int i = 0; i < tests; i++) {
+        cin >> V >> E;
+
+        intializeGraph();
         
-//         for(int j = 1; j < v + 1; j++) {
-//             vector<bool> visited(v + 1);
-            
-//             dfs(j, j, isCycle, visited);
-            
-//             if(isCycle) {
-//                 cout << "true" << " ";
-                
-//                 break;
-//             }
-//         }
-        
-//         if(!isCycle) {
-//             cout << "false" << " ";
-//         }
-//     }
-// }
+        dfs();
+        cout << boolalpha << isCyclic << " ";
+    }
+    
+    cout << '\n';
+}
+
+/*
+
+1
+8 7
+0 1 2 // {1} first component
+0 2 5 // {1} 
+2 3 6 // {1}
+4 5 8 // {2} second component
+4 6 7 // {2} 
+7 6 4 // {2}
+7 4 9 // {2}
+
+*/
