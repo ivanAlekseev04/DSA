@@ -1,83 +1,75 @@
-// Idea of task: edge's initial neighbours are all other edges to which it doesn't have a path(kind of negation)
-// https://www.hackerrank.com/contests/sda-hw-10-2022/challenges/challenge-3782/copy-from/1364661770
-
 #include <bits/stdc++.h>
 using namespace std;
 
-struct Elem {
-    int edge;
-    int traversedCount;
+const int UNINITIALIZED = -1;
 
-    Elem() : edge(1), traversedCount(0) {}
-    Elem(int edge, int traversedCount) : edge(edge), traversedCount(traversedCount) {}
-};
-
-int E, V;
-int counter = 1; // counter need to be "1", because we don't need to calculate distance from parent to itself
-unordered_map<int, unordered_set<int>> notToVisit;
+int E,V; // vertices "V" will start from number 1 
+vector<vector<int>> adj;
 vector<int> distances;
 
-void bfs(int startEdge) {
-    vector<bool> visited(E + 1, 0);
-    
-    queue<Elem> toTraverse;
-    visited[startEdge] = true;
-    toTraverse.push(Elem(startEdge, 0));
+void intializeGraph() {
+    int from, to;
+    for(int i = 0; i < E; i++) {
+        cin >> from >> to;
+
+        adj[from].push_back(to);
+        adj[to].push_back(from);
+    }
+}
+
+void bfs(int from) {
+    vector<bool> visited(V, false);
+    queue<pair<int, int>> toTraverse;
+
+    visited[from] = true;
+    toTraverse.push(make_pair(from, 0));
 
     while(!toTraverse.empty()) {
-        Elem toCheck = toTraverse.front();
+        int vertex = toTraverse.front().first;
+        int traversed = toTraverse.front().second;
+
+        visited[vertex] = true;
         toTraverse.pop();
 
-        for(int i = 1; i < (E + 1); i++) {
-            if(counter == E)
-                return;
-            
-            if(!visited[i] && notToVisit[toCheck.edge].find(i) == notToVisit[toCheck.edge].end()) {
-                visited[i] = 1;
-                toTraverse.push(Elem(i, toCheck.traversedCount + 1));
-                distances[i] = toCheck.traversedCount + 1;
-                counter++;
+        if(distances[vertex] == UNINITIALIZED)
+            distances[vertex] = traversed;
+
+        for(auto it : adj[vertex]) {
+            if(!visited[it]) {
+                toTraverse.push(make_pair(it, traversed + 1));
             }
         }
     }
 }
 
 int main() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    cin >> V >> E;
+
+    adj = vector<vector<int>>(V, vector<int>());
+    distances = vector<int>(V, UNINITIALIZED);
+
+    intializeGraph();
     
-    int tests;
-    cin >> tests;
+    int from;
+    cin >> from;
 
-    for(int i = 0; i < tests; i++) {
-        cin >> E >> V;
+    bfs(from);
 
-        distances = vector<int>(E + 1, -1);
-        notToVisit = unordered_map<int, unordered_set<int>>();
-        counter = 1; // counter need to be "1", because we don't need to calculate distance from parent to itself
-
-        int from, to;
-        for(int j = 0; j < V; j++) {
-            cin >> from >> to;
-
-            notToVisit[from].insert(to);
-            notToVisit[to].insert(from);
-            notToVisit[to].insert(to);
-            notToVisit[from].insert(from);
-        }
-
-        int startEdge;
-        cin >> startEdge;
-        
-        if(startEdge < 1 || startEdge > E)
-            continue;
-            
-        bfs(startEdge);
-
-        for(int j = 1; j < (E + 1); j++) {
-            if(j != startEdge)
-                cout << distances[j] << " ";
-        }
-        cout << '\n';
-    }
+    return 0;
 }
+   
+/*
+V = 8
+E = 10
+
+2 1
+1 0
+0 3
+3 7
+3 4
+7 6
+4 6
+4 5
+4 7
+5 6
+*/
