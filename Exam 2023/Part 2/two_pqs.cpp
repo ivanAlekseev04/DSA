@@ -1,74 +1,75 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <queue>
-#include <deque>
+#include <bits/stdc++.h>
 using namespace std;
-typedef pair<int, pair<int, int> > piii;
-int n;
-int t;
-priority_queue<piii, vector<piii>, greater<piii> > in;
-priority_queue<piii, vector<piii>, greater<piii> > out;
-priority_queue<int, vector<int>, greater<int>> fs;
 
-bool isFree[500001];
-int seated[500001];
+struct Person {
+    size_t initialIndex;
+    size_t enter;
+    size_t exit;
+    long long tableIndex; 
 
-int main() {
-    
-    ios::sync_with_stdio(false);
-    
-    cin >> n;
-    int x, y;
-    
-    for (int i = 0; i < n; i++)
-    {
-        cin >> x >> y;
-        
-        in.push(make_pair(x, make_pair(y, i)));
-        out.push(make_pair(y, make_pair(x, i)));
-        fs.push(i);
+    Person(size_t initialIndex, size_t enter, size_t exit) {
+        this->initialIndex = initialIndex;
+        this->enter = enter;
+        this->exit = exit;
     }
-    
-    cin >> t;
-    
-    for (int i = 0; i < n; i ++)
-    {
-        piii curr = in.top();
-        in.pop();
-        
-        int time = curr.first;
-        
-        if (!out.empty())
-        {
-            piii currO = out.top();
+    Person() : enter(0), exit(0), initialIndex(0), tableIndex(-1) {}
+};
 
-            while (currO.first <= time)
-            {
-                fs.push(seated[currO.second.second]);
-                out.pop();
-                if (out.empty())
-                {
-                     break;
-                }
-                else
-                {
-                    currO = out.top();
-                }
-            }
+struct Cmp1 {
+    bool operator()(const Person& f, const Person& s) const {
+        return f.enter > s.enter;
+    }
+};
+struct Cmp2 {
+    bool operator()(const Person& f, const Person& s) const {
+        return f.exit > s.exit;
+    }
+};
+
+int countFriends;
+
+priority_queue<Person, vector<Person>, Cmp1> friendsToEnter;
+priority_queue<Person, vector<Person>, Cmp2> friendsToExit;
+priority_queue<size_t, vector<size_t>, greater<size_t>> freeTables;
+
+int main() {    
+    cin >> countFriends;
+
+    size_t enterT, exitT;
+    for(int i = 0; i < countFriends; i++) {
+        cin >> enterT >> exitT;
+        friendsToEnter.push(Person(i, enterT, exitT));
+    }
+
+    size_t searchedIndex;
+    cin >> searchedIndex;
+
+    freeTables.push(0);
+
+    size_t traversedTables = 0;
+    while(!friendsToEnter.empty()) {
+        auto curFriend = friendsToEnter.top();
+        friendsToEnter.pop();
+
+        traversedTables++;
+
+        while(!friendsToExit.empty() && 
+            curFriend.enter >= friendsToExit.top().exit) {
+
+            freeTables.push(friendsToExit.top().tableIndex);
+            friendsToExit.pop();
         }
-        
-        seated[curr.second.second] = fs.top();
-        fs.pop();
-        
-        if (curr.second.second == t)
-        {
-            cout << seated[t];
-            return 0;
+
+        if(curFriend.initialIndex == searchedIndex) {
+            cout << freeTables.top() << '\n';
+            break;
+        } else {
+            curFriend.tableIndex = freeTables.top();
+            freeTables.pop();
+
+            freeTables.push(traversedTables);
+
+            friendsToExit.push(curFriend);
         }
     }
-    
-    return 0;
 }
