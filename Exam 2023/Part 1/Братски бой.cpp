@@ -1,49 +1,35 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <map>
+#include <bits/stdc++.h>
 using namespace std;
 
-int n;
-int stickers[5000000];
-int wanted[5000000];
-
-map<int, int> s;
-
-int f;
+vector<size_t> first;
+vector<size_t> second;
+unordered_map<int, int> curDigits;
 
 int main() {
-    ios::sync_with_stdio(false); 
-    
-    cin >> n;
-    
-    for (int i = 0; i < n; i++)
-    {
-        cin >> stickers[i];
+    size_t count;
+    cin >> count;
+
+    first = vector<size_t>(count); 
+    second = vector<size_t>(count); 
+
+    for(size_t i = 0; i < count; i++) {
+        cin >> first[i];
     }
-    
-    for (int i = 0; i < n; i++)
-    {
-        cin >> wanted[i];
+
+    for(size_t i = 0; i < count; i++) {
+        cin >> second[i];
     }
-    
-    for (int i = 0; i < n; i++)
-    {
-        s[stickers[i]]++;
-        
-        if (s[wanted[i]] == 0)
-        {
-            f++;
-        }
-        else
-        {
-            s[wanted[i]]--;
+
+    size_t counter = 0;
+    for(size_t i = 0; i < count; i++) {
+        curDigits[first[i]]++;
+
+        if(curDigits[second[i]] == 0) {
+            counter++;
+        } else {
+            curDigits[second[i]]--;
         }
     }
-    
-    cout << f << endl;
-    
-    return 0;
+
+    cout << counter << '\n';
 }
