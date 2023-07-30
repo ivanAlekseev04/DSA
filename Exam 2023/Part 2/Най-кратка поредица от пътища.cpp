@@ -1,119 +1,101 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
-#include <map>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
-typedef pair<int, int> pii;
+int E,V;
 
-int n, m;
-int p;
+vector<vector<int>> adj;
+vector<int> path;
 
-int k;
+vector<bool> forbiddenByOrder;  
+vector<bool> forbiddenByClause;  
 
-pii r[1000001];
-int a[1001];
+void intializeGraph() {
+    int from, to;
+    for(int i = 0; i < E; i++) {
+        cin >> from >> to;
 
-bool b[1001];
-bool av[1001];
-
-vector<int> al[1001];
-
-int currQ;
-int visited[1001];
-
-int bfs(int start, int end)
-{
-    queue<pii> q;
-    visited[start] = currQ;
-    q.push(make_pair(start, 0));
-    
-    while(!q.empty())
-    {
-        pii curr = q.front();
-        
-        for (int i = 0; i < al[curr.first].size(); i++)
-        {
-            if (al[curr.first][i] == end)
-                return curr.second + 1;
-            
-            if (visited[al[curr.first][i]] < currQ && av[al[curr.first][i]] == 0)
-            {
-                q.push(make_pair(al[curr.first][i], curr.second+1));
-                visited[al[curr.first][i]] = currQ;
-            }
-            
-        }
-        q.pop();
+        adj[from].push_back(to);
+        adj[to].push_back(from);
     }
-    
-    return -1; 
+}
+void initializePath() {
+    int pathLength;
+    cin >> pathLength;
+    path = vector<int>(pathLength);
+
+    int toAdd;
+    for(int i = 0; i < pathLength; i++) {
+        cin >> toAdd;
+        path[i] = toAdd;
+        
+        if(i >= 2)
+            forbiddenByOrder[toAdd] = true;
+    }
+}
+void initializeForbiddenByClause() {
+    int forbiddenCount;
+    cin >> forbiddenCount;
+
+    int vertex;
+    for(int i = 0; i < forbiddenCount; i++) {
+        cin >> vertex;
+
+        forbiddenByClause[vertex] = true;
+    }
+}
+
+bool bfsUtil(int from, int to, int& pathWeight) {
+    vector<bool> visited(V + 1, false);
+    queue<pair<int, int>> toTraverse;
+
+    visited[from] = true;
+    toTraverse.push(make_pair(from, 0));
+
+    while(!toTraverse.empty()) {
+        int vertex = toTraverse.front().first;
+        int traversed = toTraverse.front().second;
+
+        visited[vertex] = true;
+        toTraverse.pop();
+
+        for(auto it : adj[vertex]) {
+            if(it == to) {
+                pathWeight += traversed + 1;
+                return true;
+            }
+
+            if(!visited[it] && !forbiddenByClause[it] && !forbiddenByOrder[it]) {
+                toTraverse.push(make_pair(it, traversed + 1));
+            }
+        }
+    }
+
+    return false;
+}
+int bfs() {
+    int pathWeight = 0;
+
+    for(int i = 0; i < path.size() - 1; i++) {
+        if(!bfsUtil(path[i], path[i + 1], pathWeight))
+            return -1;
+
+        if(i + 2 < path.size())
+            forbiddenByOrder[path[i + 2]] = false;     
+    }
+
+    return pathWeight;
 }
 
 int main() {
+    cin >> V >> E;
+
+    adj = vector<vector<int>>(V + 1, vector<int>());
+    forbiddenByClause = vector<bool>(V + 1, false);
+    forbiddenByOrder = vector<bool>(V + 1, false);
+
+    intializeGraph();
+    initializePath();
+    initializeForbiddenByClause();
     
-    ios::sync_with_stdio(false);
-    
-    cin >> n >> m;
-    
-    for (int i = 0; i < m; i++)
-    {
-        cin >> r[i].first >> r[i].second;
-    }
-    
-    cin >> p;
-    
-    for (int i = 0; i < p; i++)
-    {
-        cin >> a[i];
-        av[a[i]] = 1;
-    }
-    
-    cin >> k;
-    
-    int x;
-    for (int i = 0; i < k ; i++)
-    {
-        cin >> x;
-        
-        b[x] = true;
-    }
-    
-    for (int i = 0; i < m; i++)
-    {
-        if (b[r[i].first] == 0 && b[r[i].second] == 0)
-        {
-            al[r[i].first].push_back(r[i].second);
-            al[r[i].second].push_back(r[i].first);
-        }
-    }
-    
-    currQ = 1;
-    int res = 0;
-    for (int i = 1; i < p; i++)
-    {
-        av[a[i-1]] = 0;
-        av[a[i]] = 0;
-        
-        int l = bfs(a[i-1], a[i]);
-        
-        if (l == -1)
-        {
-            cout << "-1\n";
-            return 0;
-        }
-        else
-        {
-            res += l;
-        }
-        
-        currQ ++;
-    }
-    
-    cout << res;
-    
-    return 0;
+    cout << bfs() << '\n';
 }
