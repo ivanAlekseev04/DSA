@@ -1,60 +1,58 @@
-#include <cmath>
-#include <cstdio>
-#include <vector>
-#include <iostream>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
 
-int n, e, k;
+vector<bool> visited;
+vector<vector<int>> g;
+vector<int> components;
+int color = 0;
 
-vector<int> al[10000000];
-
-bool visited[10000000];
-
-int currC;
-int res;
-
-void dfs(int index)
-{
-    currC++;
-    visited[index] = 1;
+void dfsUtil(int vertex) {
+    visited[vertex] = true;
+    components[color]++;
     
-    for (int i = 0; i < al[index].size(); i++)
-    {
-        if (visited[al[index][i]] == 0)
-        {
-            dfs(al[index][i]);
+    for(auto it : g[vertex]) {
+        if(!visited[it]) {
+            dfsUtil(it);
         }
     }
 }
 
+void dfs(int v) {
+    visited = vector<bool>(v, false);
+    
+    for(int i = 0; i < v; i++) {
+        if(!visited[i]) {
+            dfsUtil(i);
+        }
+        
+        color++;
+    }
+}
+
 int main() {
+    int v, e, sizeOfGroup;
     
-    ios::sync_with_stdio(false);
+    cin >> v >> e >> sizeOfGroup;
     
-    cin >> n >> e >> k;
+    g = vector<vector<int>>(v, vector<int>());
+    components = vector<int>(v, 0);
     
-    int x, y;
-    for (int i = 0; i < e; i++)
-    {
-        cin >> x >> y;
-        al[x].push_back(y);
-        al[y].push_back(x);
+    int from, to;
+    for(int i = 0; i < e; i++) {
+        cin >> from >> to;
+        
+        g[from].push_back(to);
+        g[to].push_back(from);
     }
     
-    for (int i = 0; i < n; i++)
-    {
-        if (visited[i] == 0)
-        {
-            currC = 0;
-            dfs(i);
-            
-            if (currC % k == 0)
-                res++;
+    dfs(v);
+    
+    int counter = 0;
+    for(auto it : components) {
+        if(it % sizeOfGroup == 0 && it != 0) {
+            counter++;
         }
     }
     
-    cout << res;
-    
-    return 0;
+    cout << counter << '\n';
 }
