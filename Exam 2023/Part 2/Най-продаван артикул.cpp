@@ -1,83 +1,99 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-using i64 = long long;
-using u64 = unsigned long long;
+struct Stock {
+    size_t frequency;
+    size_t lastSoldTime;
 
-struct OrdPair {
-    i64 first;
-    i64 second;
-    
-    bool operator<(const OrdPair& other) const {
-        return first < other.first;
+    Stock() : frequency(0), lastSoldTime(0) {}
+    Stock(size_t frequency, size_t lastSoldTime) : frequency(frequency), lastSoldTime(lastSoldTime) {}
+};
+struct Input {
+    size_t numberStock;
+    size_t time;
+
+    Input() : numberStock(0), time(0) {}
+    Input(size_t numberStock, size_t time) : numberStock(numberStock), time(time) {}
+};
+
+struct Cmp2 {
+        bool operator()(const Stock& f, const Stock& s) const {
+            if(f.frequency == s.frequency)
+                return f.lastSoldTime > s.lastSoldTime; 
+
+            return f.frequency > s.frequency;
+        }
+};
+struct Cmp1 {
+    bool operator()(const Input& f, const Input& s) const {
+        return f.time > s.time;
     }
 };
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    
-    i64 N;
-    cin >> N;
-    
-    vector<OrdPair> changes;
-    changes.reserve(N);
-    
-    unordered_map<i64, i64> counts;
-    i64 maxCount = 0;
-    i64 maxCountAt = -1;
-    
-    for(i64 i = 0; i < N; i++){
-        i64 id, time;
-        cin >> id >> time;
+size_t requestsCount;
+priority_queue<size_t, vector<size_t>, greater<size_t>> requestsSorted;
+vector<size_t> requests;
+unordered_map<size_t, long long> result;
 
-        counts[id]++;
+unordered_map<size_t, size_t> lastSold;
+unordered_map<size_t, size_t> frequency;
 
-        if(counts[id] >= maxCount){
-            if(maxCountAt != id){
-                changes.push_back({time, id});
-            }
+size_t stocksCount;
+priority_queue<Input, vector<Input>, Cmp1> input;
+map<Stock, size_t, Cmp2> sortedStocks;
+
+void getMostFrequent(size_t tillTime) {
+    while(!input.empty()) {
+        auto cur = input.top();
+
+        if(cur.time <= tillTime) { // TODO: not sure about "<="
+            sortedStocks.erase(Stock(frequency[cur.numberStock], lastSold[cur.numberStock]));
             
-            maxCount = counts[id];
-            maxCountAt = id;
+            frequency[cur.numberStock]++;
+            lastSold[cur.numberStock] = cur.time;
+            
+            sortedStocks.insert(make_pair(Stock(frequency[cur.numberStock], lastSold[cur.numberStock]), cur.numberStock));
+
+            input.pop();
+        } else {
+            break;
         }
     }
-    
-    // for(auto i : changes) cout << i.second << " at time " << i.first << endl;
-    // cout << endl;
-    
-    i64 Q;
-    cin >> Q;
-    
-    for(i64 t = 0; t < Q; t++){
-        i64 time;
-        cin >> time;
-        
-        i64 ans = -1;
-        
-        auto lastChange = lower_bound(changes.begin(), changes.end(), OrdPair{time, -1});
-        
-        if(lastChange == changes.end()){
-            // after the final sale
-            ans = changes[changes.size() - 1].second;
-        }else{
-            if(lastChange->first == time){
-                // exactly after a change
-                ans = lastChange->second;
-            }else{
-                if(lastChange != changes.begin()){
-                    // not before first sale, take previous
-                    lastChange--;
-                    ans = lastChange->second;
-                }
-            }
-        }
-        
-        cout << ans << '\n';
-        
-        // cout << "last change for query " << time << " at index " << (lastChange - changes.begin()) << endl;
+
+    if(sortedStocks.empty()) {
+        result.insert(make_pair(tillTime, -1));
+    } else {
+        result.insert(make_pair(tillTime, sortedStocks.begin()->second));
     }
+}
+
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
     
-    return 0;
+    cin >> stocksCount;
+
+    for(size_t i = 0, stock = 0, time = 0; i < stocksCount; i++) {
+        cin >> stock >> time;
+        input.push(Input(stock, time));
+    }
+
+    cin >> requestsCount;
+    requests = vector<size_t>(requestsCount);
+
+    for(size_t i = 0; i < requestsCount; i++) {
+        cin >> requests[i];
+        requestsSorted.push(requests[i]);
+    }
+
+    while(!requestsSorted.empty()) {
+        size_t toProcess = requestsSorted.top();
+        requestsSorted.pop();
+
+        getMostFrequent(toProcess);
+    }
+
+    for(auto it : requests) {
+        cout << result[it] << '\n';
+    }
 }
