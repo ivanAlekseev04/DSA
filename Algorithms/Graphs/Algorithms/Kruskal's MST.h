@@ -64,30 +64,31 @@ void unionEdges(int from, int to) {
 bool kruskal() {
     sort(adj.begin(), adj.end(), [](Node& f, Node& s) {return f.weight < s.weight;}); // Sorting edges in increasing order by "weight"
 
-    int i = 0, j = 0;
+    int i = 0;
+    for(int j = 0; j < E; j++) {
+        if(i == V - 1) {
+            break;
+        }
 
-    while(i < V - 1 && j < E) {
         int fromP = findParent(adj[j].from);
         int toP = findParent(adj[j].to);
         int weight = adj[j].weight;
 
-        j++; // Iterator for the edges in graph
-
         if(fromP == toP) {
             continue;
+        } else {
+            unionEdges(fromP, toP);
+            MSTcost += weight;
+            mst.push_back(adj[j]);
+
+            i++; // Incrementing count of edges already existed in MST 
         }
-
-        unionEdges(fromP, toP);
-        MSTcost += weight;
-        mst.push_back(adj[j - 1]);
-
-        i++; // Incrementing count of edges already existed in MST 
     }
-
+    
     if(i != V - 1) // Final check, whether MST was formed completely
         return false;
-
-    return true; 
+    else
+        return true; 
 }   
 
 int main() {
