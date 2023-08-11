@@ -215,7 +215,7 @@ struct LinkedList {
         }
 
         // Palindrom check
-        bool isPalindromWithPointers() {
+        bool isPalindrom() {
             if(head == tail) {
                 return true;
             }
