@@ -1,290 +1,259 @@
-#pragma once
-#include <iostream>
-        
-template <class T>
-class LinkedList {
-private:
-    struct Node {
-        T data;
-        Node *next;
+#pragma once       
+#include <bits/stdc++.h>
+using namespace std;
 
-        Node(T data, Node* next = nullptr) : data(data) {
-            this->next = next;
-        }
-    };
-    Node* head;
-    Node* tail;
-    void free() {
-        Node* toDelete = head;
+struct Node {
+    int val;
+    Node* next;
 
-        while(head != nullptr) {
-            toDelete = head;
-            head = head->next;
-            delete toDelete;
-        }   
-    };
-    size_t size;
+    Node(int val) : val(val), next(nullptr) {}
+    Node() : val(0), next(nullptr) {}
+};
 
-public:
-    // C-tors & d-tor
-    LinkedList() {head = tail = nullptr; size = 0;};
-    ~LinkedList() {free();};
+struct LinkedList {
+    private:
+        void free() {
+            Node* toDelete = head;
 
-    // Mutators
-    void pushFront(const T& data) {
-        Node* newNode = new Node(data);
-
-        if(head == nullptr) {
-            head = tail = newNode;
-            newNode->next = nullptr;
-            size++;
-            return;
-        } 
-
-        newNode->next = head;
-        head = newNode;
-
-        size++;
-    }
-    void pushBack(const T& data) {
-        Node* newNode = new Node(data);
-        newNode->next = nullptr;
-
-        if(tail == nullptr) 
-            head = newNode;
-        else 
-            tail->next = newNode;
-
-        tail = newNode;
-        size++;
-    }
-    void popBack() {
-        if(head == tail) {
-            delete head;
-            head = tail = nullptr;
-            size--;
-            return;
-        }
-
-        Node* next = head;
-        Node* prev = head;
-
-        while(next != tail) {
-            prev = next;
-            next = next->next;    
-        }
-
-        delete next;
-        prev->next = nullptr;
-        tail = prev;
-
-        size--;
-    }
-    void popFront() {
-        if(head == tail) {
-            delete head;
-            head = tail = nullptr;
-            size--;
-            return;
-        }
-
-        Node* temp = head;
-        head = head->next;
-
-        size--;
-
-        delete temp;
-    }
-    void insert(const T& data, size_t pos) {
-        if(pos > size) {
-            throw std::out_of_range("Invalid index");
-        }
-        else if(pos == 0) {
-            pushFront(data);
-            return;
-        }
-        else if(pos == size) {
-            pushBack(data);
-            return;
-        }
-
-        Node* prev = head;
-        Node* next = head;
-        size_t iter = 0;
-
-        while(next != nullptr) {
-            if(iter == pos) {
-                Node* newNode = new Node(data);
-                newNode->next = next;
-                prev->next = newNode;
-                size++;
-                break;
+            while(head != nullptr) {
+                toDelete = head;
+                head = head->next;
+                delete toDelete;
             }
 
-            prev = next;
-            next = next->next;
-            iter++;
-        }
-    }
-    void erase(size_t pos) {
-        if(pos < 0 || pos > size - 1) {
-            throw std::out_of_range("Invalid index");
-        }
-        else if(pos == 0) {
-            popFront();
-            return;
-        }
-        else if(pos == size - 1) {
-            popBack();
-            return;
+            head = tail = nullptr;
         }
 
-        Node* prev = head;
-        Node* next = head;
-        size_t iter = 0;
+        Node* head = nullptr;
+        Node* tail = nullptr;
+        size_t size = 0;
 
-        while(next != nullptr) {
-            if(iter == pos) {
-                prev->next = next->next;
-                delete next;
-                size--;
-                break;
+    public:
+        LinkedList() {}
+        LinkedList(const LinkedList& list) {
+            Node* toCopy = list.head;
+
+            while(toCopy != nullptr) {
+                pushBack(toCopy->val);
+                toCopy = toCopy->next;
             }
+        }
+        ~LinkedList() { free(); }
+
+        // Add element
+        void pushFront(int val) {
+            Node* temp = head;
+            head = new Node(val);
+            head->next = temp;
             
-            iter++;
-            prev = next;
-            next = next->next;
-        }
-    }
-    void copy(const LinkedList& list) {
-        free();
-        Node* toAdd = list.head;
+            if(tail == nullptr) {
+                tail = head;
+            } else if(head == tail) {    
+                tail = temp;
+            }
 
-        while(toAdd != nullptr) {
-            pushBack(toAdd->data);
-            toAdd = toAdd->next;
+            size++;
         }
-    }
-    void reverse() {
-        if(size <= 1) {
-            return;
+        void pushBack(int val) {
+            if(tail == nullptr) {
+                head = new Node(val);
+                tail = head;
+            } else {
+                tail->next = new Node(val);
+                tail = tail->next;
+            }
+
+            size++;
         }
-
-        T buff[size];
-        Node* elem = head;
-
-        for(int i = 0; i < size && elem != nullptr; i++) {
-            buff[i] = elem->data;
-            elem = elem->next; 
-        }
-
-        std::reverse(buff, buff + size);
-        elem = head;
-
-        for(int i = 0; i < size && elem != nullptr; i++) {
-            elem->data = buff[i];
-            elem = elem->next; 
-        }
-    }
-    void reverseWithPointers() {
-            if(head == tail || head == nullptr) {
+        void insert(int val, int index) {
+            if(index < 0 || index > size) {
+                throw out_of_range("Invalid insertion index");
+            } else if(index == 0) {
+                pushFront(val);
+                return;
+            } else if(index == size) {
+                pushBack(val);
                 return;
             }
 
-            Node* prev = head;
-            Node* next = head->next;
-            Node* temp;
+            int counter = 0;
 
-            prev->next = nullptr;
-            tail = prev;
+            Node* cur = head;
+            Node* prev;
 
-            while(next != nullptr) {
-                temp = next->next;
-                next->next = prev;
+            while(cur != nullptr) {
+                if(counter == index) {
+                    prev->next = new Node(val);
+                    prev->next->next = cur;
+                    size++;
 
-                prev = next;
-                next = temp;
+                    break;
+                } else {
+                    prev = cur;
+                    cur = cur->next;
+                    counter++;
+                }
             }
-
-            head = prev;
-    }
-    size_t count(const T& data) const {
-        size_t counter = 0;
-        Node* iter = head;
-
-        while(iter != nullptr) {
-            if(iter->data == data) {
-                counter++;
-            }
-
-            iter = iter->next;
         }
 
-        return counter;
-    }
-    bool isPalindrome() const {
-        if(size <= 1) {
+        // Remove a node
+        void popFront() {
+            if(head == nullptr) {
+                return;
+            }
+
+            if(head == tail) {
+                delete head;
+                head = tail = nullptr;
+            } else {
+                Node* toDelete = head;
+                head = head->next;
+                delete toDelete;
+                toDelete = nullptr;
+            }
+
+            size--;
+        }
+        void popBack() {
+            if(head == nullptr) {
+                return;
+            } else if(head == tail) {
+                delete head;
+                head = tail = nullptr;
+                size = 0;
+
+                return;
+            }
+
+            Node* cur = head;
+            Node* prev;
+
+            while(cur->next != nullptr) {
+                prev = cur;
+                cur = cur->next;
+            }
+
+            delete cur;
+            prev->next = nullptr;
+            tail = prev;
+        }
+        void erase(int index) {
+            if(index < 0 || index >= size) {
+                throw out_of_range("Invalid deletion index");
+            } else if(index == 0) {
+                popFront(); 
+                return;
+            } else if(index == size - 1) {
+                popBack(); 
+                return;
+            }
+
+            Node* cur = head;
+            Node* prev;
+            int counter = 0;
+
+            while(cur != nullptr) {
+                if(counter == index) {
+                    prev->next = cur->next;
+                    delete cur;
+                    size--;
+
+                    break;
+                } else {
+                    counter++;
+                    prev = cur;
+                    cur = cur->next;
+                }
+            }
+        }
+        void clear() {
+            free();
+        }
+
+        // Reversing
+        void reverseWithPointers() {
+            if(head == tail) {
+                return;
+            }
+
+            Node* cur = head->next;
+            Node* prev = head;
+            Node* next = cur->next;
+
+            tail = prev;
+            prev->next = nullptr;
+            cur->next = prev;
+
+            while(next != nullptr) {
+                prev = cur;
+                cur = next;
+                next = next->next;
+                cur->next = prev;
+            }
+
+            head = cur;
+        }
+        void reverseWithArray() {
+            if(head == nullptr)
+                return;
+
+            vector<int> vals;
+
+            Node* temp = head;
+            while(temp != nullptr) {
+                vals.push_back(temp->val);
+                temp = temp->next;
+            }
+
+            reverse(vals.begin(), vals.end());
+
+            temp = head;
+            for(auto it : vals) {
+                temp->val = it;
+                temp = temp->next;
+            }
+        }
+
+        // Palindrom check
+        bool isPalindromWithPointers() {
+            if(head == tail) {
+                return true;
+            }
+
+            stack<int> toCompare;
+            Node* toTraverse = head;
+
+            for(int i = 0; i < (size / 2); i++) {
+                toCompare.push(toTraverse->val);
+                toTraverse = toTraverse->next;
+            }
+
+            if(size % 2 != 0) {
+                toTraverse = toTraverse->next;
+            }
+
+            while(!toCompare.empty()) {
+                if(toCompare.top() != toTraverse->val) {
+                    return false;
+                }
+
+                toCompare.pop();
+                toTraverse = toTraverse->next;
+            }
+
             return true;
         }
 
-        T buffer[size];
-        Node* iter = head;
-        for(int i = 0; i < size && iter != nullptr; i++) {
-            buffer[i] = iter->data;
-            iter = iter->next;
-        }
+        // Other
+        size_t getSize() const { return size; }
+        void print() {
+            Node* temp = head;
 
-        bool check = false;
-        for(int i = 0; i < (size / 2); i++) {
-            if(buffer[i] == buffer[size - 1 - i]) {
-                check = true;
-            }
-            else {
-                check = false;
-            }
-        }
-
-        return check;
-    }
-    void removeAll(const T& data) {
-        Node* prev = head;
-        Node* cur = head;
-        Node* toDelete;
-
-        while(cur != nullptr) {
-            if(cur->data == data) {
-                prev->next = cur->next;
-                toDelete = cur;
-                cur = prev->next;
-                
-                if(toDelete == head) {
-                    head = prev->next;
-                }
-
-                delete toDelete;
-                continue;
+            while(temp != nullptr) {
+                cout << temp->val << " ";
+                temp = temp->next;
             }
 
-            prev = cur;
-            cur = cur->next;
+            cout << '\n';
         }
-    }
-
-    // Accessors
-    size_t getSize() const {return size;};
-
-    //Additional
-    void print() {
-        Node* iter = head;
-
-        std::cout << "[ ";
-
-        while(iter != nullptr) {
-            std::cout << iter->data << " ";
-            iter = iter->next;
-        }
-
-        std::cout << "]\n";
-    }
 };
-
