@@ -1,18 +1,12 @@
 // Complexity: O(N^2) 
-void insertionSort(int* arr, size_t size) 
-{
-    for (size_t i = 1; i < size; i++)
-    {
-        int cur = arr[i];
-        int prevIdx = i - 1;
-
-        while(prevIdx >= 0 && arr[prevIdx] > cur) 
-        {
-            arr[prevIdx + 1] = arr[prevIdx];
-            prevIdx--;
-        }
-
-        arr[prevIdx + 1] = cur;
+void insertionSort(vector<int>& v) {
+    for(int i = 1; i < v.size(); i++) {
+        for(int j = i; j >= 1; j--) {
+            if(v[j - 1] > v[j]) {
+                swap(v[j - 1], v[j]);
+            } else {
+                break;
+            }
+        } 
     }
-    
 };
