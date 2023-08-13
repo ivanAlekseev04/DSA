@@ -176,22 +176,23 @@ class LinkedList {
                 return;
             }
 
-            Node* cur = head->next;
-            Node* prev = head;
+            Node* prev = nullptr;
+            Node* cur = head;
             Node* next = cur->next;
+            
+            tail = cur;
 
-            tail = prev;
-            prev->next = nullptr;
-            cur->next = prev;
-
-            while(next != nullptr) {
+            while(cur != nullptr) {
+                cur->next = prev;
+                
                 prev = cur;
                 cur = next;
-                next = next->next;
-                cur->next = prev;
-            }
 
-            head = cur;
+                if(next != nullptr) 
+                    next = next->next;
+                else
+                    head = prev; // "prev" at this moment will be exactly the last element from non-reversed LinkedList
+            }
         }
         void reverseWithArray() {
             if(head == nullptr)
