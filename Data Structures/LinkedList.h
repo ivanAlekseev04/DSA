@@ -10,7 +10,7 @@ struct Node {
     Node() : val(0), next(nullptr) {}
 };
 
-struct LinkedList {
+class LinkedList {
     private:
         void free() {
             Node* toDelete = head;
