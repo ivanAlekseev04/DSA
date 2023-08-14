@@ -6,8 +6,8 @@ struct Node {
     Node* left;
     Node* right;
 
-    Node() : val(0), left(nullptr), right(nullptr) { }
-    Node(int val) : val(val), left(nullptr), right(nullptr) { }
+    Node() : val(0), left(nullptr), right(nullptr) {}
+    Node(int val) : val(val), left(nullptr), right(nullptr) {}
 };
 
 class BST {
