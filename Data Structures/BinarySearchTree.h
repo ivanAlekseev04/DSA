@@ -1,19 +1,20 @@
 #pragma once
 #include <iostream>
 
+struct Node {
+    int val;
+    Node* left;
+    Node* right;
+
+    Node() : val(0), left(nullptr), right(nullptr) { }
+    Node(int val) : val(val), left(nullptr), right(nullptr) { }
+};
+
 class BST {
     private:
-        struct Node {
-            int val;
-
-            Node* left;
-            Node* right;
-
-            Node() : val(0), left(nullptr), right(nullptr) { }
-            Node(int val) : val(val), left(nullptr), right(nullptr) { }
-        };
-
         Node* root;
+
+        // insert() utility function
         Node* insertNode(Node* root, int val) {
             if(root == nullptr) 
                 return new Node(val);
@@ -25,7 +26,9 @@ class BST {
 
             return root;
         }
-        void printTree(Node* toPrint) {
+
+        // printInorder() utility function
+        void printInorderUtil(Node* toPrint) {
             if(toPrint != nullptr) {
                 printTree(toPrint->left);
 
@@ -34,6 +37,8 @@ class BST {
                 printTree(toPrint->right);
             }
         }
+
+        // remove() utility functions
         Node* getMinNode(Node* root) {
             while(root->left != nullptr) {
                 root = root->left;
@@ -80,6 +85,7 @@ class BST {
             return root;
         }
 
+        // heightOfRight() && heightOfLeft() utility function
         void heightOfSide(Node* node, int curHeight, int& maxHeight) {
             if(node != nullptr) {
                 if(node == root) {
@@ -94,30 +100,72 @@ class BST {
                 heightOfSide(node->right, curHeight + 1, maxHeight);
             }
         }
+
+        // lowestCommonAncestor() utility function
+        void getPathFromTheRoot(Node* root, int val, vector<Node*>& path) {
+            if(root != nullptr) {
+                if(path.empty() || path.back()->val != val) {
+                    path.push_back(root);
+                } else {
+                    return;
+                }
+
+                if(val < root->val) {
+                    getPathFromTheRoot(root->left, val, path);
+                } else if(val > root->val) {
+                    getPathFromTheRoot(root->right, val, path);
+                } 
+            }
+        }
+
     public:
         BST() : root(nullptr) {}
 
         void insert(int val) {
             root = insertNode(root, val);
         }
-        void print() {
-            printTree(root);
+
+        void printInorder() {
+            printInorderUtil(root);
         }
+
         void remove(int val) {
             root = removeNode(root, val);
         }
+
         int heightOfRight() {
             int maxHeight = 0;
-
             heightOfSide(root->right, 1, maxHeight);
 
             return maxHeight;
         }
+
         int heightOfLeft() {
             int maxHeight = 0;
-
             heightOfSide(root->left, 1, maxHeight);
 
             return maxHeight;
+        }
+
+        Node* lowestCommonAncestor(int p, int q) {
+            vector<Node*> pPath;
+            vector<Node*> qPath;
+
+            getPathFromTheRoot(root, p, pPath);
+            getPathFromTheRoot(root, q, qPath);
+
+            vector<Node*>& smaller = (pPath.size() >= qPath.size()) ? qPath : pPath;
+            vector<Node*>& bigger = (pPath.size() < qPath.size()) ? qPath : pPath;
+
+            int i = 0;
+            for(; i < smaller.size(); i++) {
+                if(i + 1 == smaller.size()) {
+                    break; 
+                } else if(smaller[i + 1]->val != bigger[i + 1]->val) {
+                    break;
+                }
+            }
+
+            return smaller[i];
         }
 };
