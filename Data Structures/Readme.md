@@ -6,14 +6,15 @@ Directed unweighted graph:
 ```
 ```
 Binary Search Tree:
-- insert node 
-- remove node
-- print tree
-- height of right side
-- height of left side
+- insert node function
+- remove node function
+- print tree(Inorder) function
+- height of right side function
+- height of left side function
+- LCA(lowest common ancestor) function
 ```
 ```
 Singly Linked List:
-- basic list functions
+- basic std::list functions
 - isPalindrome check
 ```
