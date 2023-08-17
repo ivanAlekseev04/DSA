@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+                        // *Undirected graph
 struct Edge {
     int edge;
     int weight;
@@ -9,15 +9,14 @@ struct Edge {
     Edge(int edge, int weight) : edge(edge), weight(weight) {}
 };
 
-class cmp {
-    public:
-        bool operator()(Edge& f, Edge& s) {
-            return f.weight > s.weight;
-        }
+struct cmp {
+    bool operator()(const Edge& f, const Edge& s) const {
+        return f.weight > s.weight;
+    }
 };
 
 int E, V;
-unordered_map<int, unordered_map<int, int>> adj;
+unordered_map<int, vector<pair<int, int>>> adj; // not "unordered_map<int, unordered_map<int, int>>" because it can exist multiple edges between 2 vertices
 vector<int> distances;
 
 void dijikstra(int startEdge) {    
@@ -50,14 +49,12 @@ void dijikstra(int startEdge) {
 int main() {
     cin >> V >> E;
 
-    for(int i = 0; i < V; i++)
-        adj.insert(make_pair(i, unordered_map<int, int>()));
-
     int from, to, weight;
     for(int i = 0; i < E; i++) {
         cin >> from >> to >> weight;
-        adj[from][to] = weight;
-        adj[to][from] = weight;
+        
+        adj[from].push_back(make_pair(to, weight));
+        adj[to].push_back(make_pair(from, weight));
     } 
 
     int startVert;
