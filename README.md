@@ -1,7 +1,7 @@
 # DSA
-## Implementation of some algorithms and data structures, that cover themes:
+## Implementations of some algorithms and data structures, that cover themes:
 ```
-- Linked list
-- Trees
+- Linked list(singly)
+- BST
 - Graphs
 ```
