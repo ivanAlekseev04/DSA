@@ -166,6 +166,51 @@ class LinkedList {
                 }
             }
         }
+        void erase(int start, int end) {
+            if(start < 0 || start >= size || start > end) {
+                return;
+            } else if(end < 0 || end >= size) {
+                return;
+            } else if(start == end) {
+                erase(start);
+                return;
+            }
+
+            Node* toDelete = head;
+            Node* beforeStart = nullptr;
+            int pos = 0;
+
+            while(toDelete != nullptr) {
+                if(pos == start) {
+                    break;
+                }
+
+                pos++;
+                beforeStart = toDelete;
+                toDelete = toDelete->next;
+            }
+
+            Node* temp;
+
+            for(int i = start; i <= end; i++) { // erase the exact range [start, end]
+                temp = toDelete;
+                toDelete = toDelete->next;
+                delete temp;
+                
+                size--;
+            }
+
+            if(beforeStart == nullptr && toDelete == nullptr) { // when deletion was: [head, tail] 
+                head = tail = nullptr;
+            } else if(beforeStart == nullptr) { // when deletion was: [head, != tail] 
+                head = toDelete;
+            } else if(toDelete == nullptr) { // when deletion was: [!= head, tail]
+                tail = beforeStart;
+                beforeStart->next = nullptr;
+            } else { // when deletion was: [!= head, != tail]
+                beforeStart->next = toDelete;
+            }
+        }
         void clear() {
             free();
         }
