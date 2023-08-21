@@ -1,15 +1,4 @@
 // Complexity: O(NlogN)
-void mergeSort(int* arr, int start, int end) { // "End" need to be (size - 1) for the proper work
-    if (start < end) {
-        int mid = start + ((end - start) / 2);
-
-        mergeSort(arr, start, mid);
-        mergeSort(arr, mid + 1, end);
-
-        merge(arr, start, mid, end);
-    }
-}; 
-
 void merge(int* arr, int start, int mid, int end) {
     int leftSize = mid - start + 1;
     int rightSize = end - mid;
@@ -48,3 +37,14 @@ void merge(int* arr, int start, int mid, int end) {
     delete left;
     delete right; 
 }
+
+void mergeSort(int* arr, int start, int end) { // "End" need to be (size - 1) for the proper work
+    if (start < end) {
+        int mid = start + ((end - start) / 2);
+
+        mergeSort(arr, start, mid);
+        mergeSort(arr, mid + 1, end);
+
+        merge(arr, start, mid, end);
+    }
+};
