@@ -1,23 +1,24 @@
 // Time complexity: O(nlog(n))
-void heapSort(int* arr, int size) {
-    int rBound = size;
+void heapSortAscending(vector<int>& v) {
+    for(int i = 0; i < v.size() - 1; i++) {
+        make_heap(next(v.begin(), i), v.end(), greater<int>());
+    }
+}
 
-    for(int i = 0; i < (size - 1); i++) {
-        make_heap(arr, arr + rBound); // make_heap() function makes max heap
-        swap(arr[size - i - 1], arr[0]);
-        rBound--;
+void heapSortDescending(vector<int>& v) {
+    for(int i = 0; i < v.size() - 1; i++) {
+        make_heap(next(v.begin(), i), v.end()); // make_heap() makes max_heap by default
     }
 }
 
 /*
 int main() {
-    int arr[] =  {12, -12, -1441, 1341, 156, 636, 1, 4, 4, -256, -3};
-    int size = (sizeof(arr) / sizeof(arr[0]));
+    vector<int> arr =  {12, -12, -1441, 1341, 156, 636, 1, 4, 4, -256, -3};
 
-    heapSort(arr, size);
+    heapSortAscending(arr);
 
-    for(int i = 0; i < size; i++) {
-        cout << arr[i] << " ";
+    for(auto it : arr) {
+        cout << it << " ";
     }
 }
 */
