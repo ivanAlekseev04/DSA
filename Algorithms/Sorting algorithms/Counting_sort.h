@@ -27,3 +27,38 @@ void countingSort(int* arr, int size) {
     delete buff;
     delete sorted;
 }
+
+// Counting sort + removing duplicates
+void countingSort(vector<int>& v) {
+    int maxVal = *max_element(v.begin(), v.end());
+    vector<int> idxs(maxVal + 1);
+    
+    int newSize = v.size();
+
+    for(auto it : v) {
+        if(idxs[it] == 1) {
+            newSize--;
+        } else {
+            idxs[it]++;
+        }
+    }
+
+    for(int i = 1; i < idxs.size(); i++) {
+        idxs[i] += idxs[i - 1];
+    }
+
+    vector<int> res(newSize);
+
+    for(int i = v.size() - 1, j = 0; j < newSize; i--) {
+        if(idxs[v[i]] == 0) {
+            continue;
+        } else {
+            j++;
+        }
+
+        res[idxs[v[i]] - 1] = v[i];
+        idxs[v[i]] = 0;
+    }
+
+    v = res;
+}
