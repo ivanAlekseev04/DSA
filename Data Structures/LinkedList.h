@@ -239,6 +239,60 @@ class LinkedList {
                     head = prev; // "prev" at this moment will be exactly the last element from non-reversed LinkedList
             }
         }
+        void reverse(int left, int right) {
+            if(left < 0 || left > right || left >= size || left == right)
+                return;
+            else if(right < left || right < 0 || right >= size) 
+                return;
+
+            Node* beforeStart = nullptr;
+            Node* afterEnd = nullptr;
+            stack<Node*> nodes;
+
+            Node* toTraverse = head;
+            int cnt = 0;
+            
+            while(toTraverse != nullptr) {
+                if(cnt >= left) {
+                    nodes.push(toTraverse);    
+                } else {
+                    beforeStart = toTraverse;
+                }
+
+                toTraverse = toTraverse->next;
+
+                if(cnt == right) {
+                    afterEnd = toTraverse;
+                    break;
+                }
+
+                cnt++;
+            }
+
+            if(cnt != right) {
+                throw out_of_range("Invalid range for reversing LinkedList");
+            }
+
+            if(beforeStart != nullptr) {
+                beforeStart->next = nodes.top();
+            } else {
+                head = nodes.top(); 
+            }
+
+            while(!nodes.empty()) {
+                auto curNode = nodes.top();
+                nodes.pop();
+
+                if(!nodes.empty()) {
+                    curNode->next = nodes.top();
+                } else {
+                    curNode->next = afterEnd;
+
+                    if(afterEnd == nullptr)
+                        tail = curNode;
+                }
+            }
+        }
 
         // Palindrom check
         bool isPalindrom() {
