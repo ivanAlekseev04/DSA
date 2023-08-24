@@ -216,7 +216,7 @@ class LinkedList {
         }
 
         // Reversing
-        void reverseWithPointers() {
+        void reverse() {
             if(head == tail) {
                 return;
             }
@@ -237,26 +237,6 @@ class LinkedList {
                     next = next->next;
                 else
                     head = prev; // "prev" at this moment will be exactly the last element from non-reversed LinkedList
-            }
-        }
-        void reverseWithArray() {
-            if(head == nullptr)
-                return;
-
-            vector<int> vals;
-
-            Node* temp = head;
-            while(temp != nullptr) {
-                vals.push_back(temp->val);
-                temp = temp->next;
-            }
-
-            reverse(vals.begin(), vals.end());
-
-            temp = head;
-            for(auto it : vals) {
-                temp->val = it;
-                temp = temp->next;
             }
         }
 
