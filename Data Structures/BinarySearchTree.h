@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
 
 struct Node {
     int val;
@@ -30,11 +31,11 @@ class BST {
         // printInorder() utility function
         void printInorderUtil(Node* toPrint) {
             if(toPrint != nullptr) {
-                printTree(toPrint->left);
+                printInorderUtil(toPrint->left);
 
-                std::cout << toPrint->val << " ";
+                cout << toPrint->val << " ";
 
-                printTree(toPrint->right);
+                printInorderUtil(toPrint->right);
             }
         }
 
@@ -118,6 +119,15 @@ class BST {
             }
         }
 
+        void clearUtil(Node* root) {
+            if(root != nullptr) {
+                clearUtil(root->left);
+                clearUtil(root->right);
+
+                delete root;
+            } 
+        }
+
     public:
         BST() : root(nullptr) {}
 
@@ -167,5 +177,10 @@ class BST {
             }
 
             return smaller[i];
+        }
+
+        void clear() {
+            clearUtil(root);
+            root = nullptr;
         }
 };
