@@ -119,6 +119,7 @@ class BST {
             }
         }
 
+        // Utility function for deleting BST entirely
         void clearUtil(Node* root) {
             if(root != nullptr) {
                 clearUtil(root->left);
@@ -131,25 +132,57 @@ class BST {
     public:
         BST() : root(nullptr) {}
 
+        // Modification in BST
         void insert(int val) {
             root = insertNode(root, val);
         }
-
-        void printInorder() {
-            printInorderUtil(root);
-        }
-
         void remove(int val) {
             root = removeNode(root, val);
         }
+        void clear() {
+            clearUtil(root);
+            root = nullptr;
+        }
 
+        // Printing
+        void printInorder() {
+            printInorderUtil(root);
+        }
+        void printLevelOrder() {
+            queue<pair<TreeNode*, int>> vals;
+            vals.push(make_pair(root, 0));
+            int level = 0;
+    
+            while(!vals.empty()) {
+                auto cur = vals.front();
+                vals.pop();
+    
+                if(cur.second != level) {
+                    level = cur.second;
+                    cout << "| ";
+                }
+    
+                cout << cur.first->val << " ";
+    
+                if(cur.first->left != nullptr) {
+                    vals.push(make_pair(cur.first->left, cur.second + 1));
+                }
+    
+                if(cur.first->right != nullptr) {
+                    vals.push(make_pair(cur.first->right, cur.second + 1));
+                }
+            }
+    
+            cout << '\n';
+        }
+
+        // Getting info
         int heightOfRight() {
             int maxHeight = 0;
             heightOfSide(root->right, 1, maxHeight);
 
             return maxHeight;
         }
-
         int heightOfLeft() {
             int maxHeight = 0;
             heightOfSide(root->left, 1, maxHeight);
@@ -157,6 +190,7 @@ class BST {
             return maxHeight;
         }
 
+        // Specific purpose
         Node* lowestCommonAncestor(int p, int q) {
             vector<Node*> pPath;
             vector<Node*> qPath;
@@ -177,10 +211,5 @@ class BST {
             }
 
             return smaller[i];
-        }
-
-        void clear() {
-            clearUtil(root);
-            root = nullptr;
         }
 };
