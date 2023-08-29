@@ -8,7 +8,7 @@ Directed unweighted graph:
 Binary Search Tree:
 - insert node function
 - remove node function
-- print tree(Inorder) function
+- print tree(Inorder, Level order) function
 - height of right side function
 - height of left side function
 - LCA(lowest common ancestor) function
