@@ -9,4 +9,4 @@
 > All materails are written in C++. 
 
 > [!IMPORTANT]
-> Materials were created in order to succeed in DSA exam 2023 summer session. Algorithms and structures had to supply FMI DSA course expectations, not in the global meaning.
+> Materials were created in order to succeed in <ins>Sofia University, FMI</ins> DSA exam 2023 summer session. Algorithms and structures had to supply course expectations, so they are in the context of this course.
