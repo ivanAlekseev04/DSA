@@ -1,5 +1,8 @@
-# Tasks/solutions of the exam "Data structures & algorithms" ***FMI 2023 winter*** *main session*
-```
-- Accent mainly on priority_queue
-- There weren't: Dijikstra, Prim's MST, Kruskal's MST, Binary search by answer
-```
+# FMI DSA exam <ins>2023 winter session</ins>
+
+## Covered themes:
+* Priority queue
+* Hash table
+* Graph: DFS, BFS
+
+> Remark: exam was divided into 2 parts: first part was easier than second.
