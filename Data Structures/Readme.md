@@ -27,6 +27,8 @@
   * reverse(int start, int end)   
   * isPalindrome check
   * get size function
-> Remark 1: LL is implemented with "size" attribute.
+> [!NOTE]
+> LL is implemented with "size" attribute.
 
-> Remark 2: LL is implemented with pointers only, not using array.
+> [!NOTE]
+> LL is implemented with pointers only, not using array.
