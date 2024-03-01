@@ -1,7 +1,7 @@
 # Materials from the FMI course DSA
 
 ## Agenda:
-* [Algorithms](./algorithms) folder - search/sort algorithms, algorithms in graph.
+* [Algorithms](./Algorithms) folder - search/sort algorithms, algorithms in graph.
 * [Data Structures](./Data%20Structures) folder - BST, Linked List(singly), Graph data structures with the most common functions for them.
 * [Exam 2023](./Exam%202023) folder - tasks & solutions to the FMI DSA exam 2023 winter session.
 
