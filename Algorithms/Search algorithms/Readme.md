@@ -1,6 +1,4 @@
-```
-Search algorithms:
-- Binary search
-- Ternary search
-- Jump search
-```
+## Search algorithms:
+  * Binary search
+  * Ternary search
+  * Jump search
